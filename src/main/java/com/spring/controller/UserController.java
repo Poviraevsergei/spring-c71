@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 
-@Controller //MVC где есть страницы
-@RequestMapping("/user") //все методы этого контроллера начинаются с /user
+@Controller
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -24,7 +26,23 @@ public class UserController {
     @GetMapping
     public String getAllUsers(ModelMap modelMap) {
         List<User> users = userService.getAllUsers();
-        modelMap.addAttribute("users",users);
-        return users.isEmpty() ? "empty" : "get_all_users";
+        modelMap.addAttribute("users", users);
+        return users.isEmpty() ? "empty" : "get_users";
     }
+
+    @GetMapping("/{id}")
+    public String getUserById(@PathVariable("id") Long id, ModelMap modelMap) { //@PathVariable если мы хотим достать из пути
+        Optional<User> user = userService.getUserById(id);
+        if (user.isPresent()) {
+            modelMap.addAttribute("user", user.get());
+            return "get_user_by_id";
+        }
+        return "empty";
+    }
+
+
+    //get single
+    //post single (как передать через url, body)
+    //put single
+    //delete single
 }
