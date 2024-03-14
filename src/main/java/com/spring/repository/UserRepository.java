@@ -74,7 +74,7 @@ public class UserRepository {
         return false;
     }
 
-    public boolean deleteUser(Long id) {
+    public Boolean deleteUser(Long id) {
         try {
             session.getTransaction().begin();
             session.remove(session.get(User.class, id));

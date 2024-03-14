@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -40,6 +41,10 @@ public class UserController {
         return "empty";
     }
 
+    @PostMapping("/{id}")
+    public String deleteUserById(@PathVariable("id") Long id) {
+        return userService.deleteUserById(id) ? "success" : "failure";
+    }
 
     //get single
     //post single (как передать через url, body)
