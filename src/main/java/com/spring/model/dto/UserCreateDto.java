@@ -1,5 +1,6 @@
 package com.spring.model.dto;
 
+import com.spring.annotation.Adult;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,6 @@ public class UserCreateDto {
     private String userPassword;
 
     @NotNull
-    @Min(18)
-    @Max(100)
+    @Adult
     private Integer age;
 }
