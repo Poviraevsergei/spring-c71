@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,13 +42,23 @@ public class UserController {
         return "empty";
     }
 
+    @PostMapping
+    public String createUser(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("age") Integer age) {
+        return userService.createUser(username, password, age) ? "success" : "failure";
+    }
+
+    @PostMapping("/update")
+    public String updateUser(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("id") Long id,
+                             @RequestParam("age") Integer age) {
+        return userService.updateUser(id, username, password, age) ? "success" : "failure";
+    }
+
     @PostMapping("/{id}")
     public String deleteUserById(@PathVariable("id") Long id) {
         return userService.deleteUserById(id) ? "success" : "failure";
     }
-
-    //get single
-    //post single (как передать через url, body)
-    //put single
-    //delete single
 }
