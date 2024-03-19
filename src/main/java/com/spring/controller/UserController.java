@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +27,11 @@ public class UserController {
     }
 
     @GetMapping
-    public String getAllUsers(ModelMap modelMap) {
+    public ModelAndView getAllUsers(ModelAndView modelAndView) {
         List<User> users = userService.getAllUsers();
-        modelMap.addAttribute("users", users);
-        return users.isEmpty() ? "empty" : "get_users";
+        modelAndView.setViewName(users.isEmpty() ? "empty" : "get_users");
+        modelAndView.addObject("users", users);
+        return modelAndView;
     }
 
     @GetMapping("/{id}")
