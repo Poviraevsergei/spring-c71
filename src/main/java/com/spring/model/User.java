@@ -38,29 +38,12 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity(name = "users")
 public class User {
+
     @Id
     @SequenceGenerator(name = "userSeqGen", sequenceName = "users_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "userSeqGen")
     private Long id;
 
-    // @NotNull - не null
-    // @Null - там null
-    // @Size(min = 10,max = 100) -размер строки
-    // @Email
-    // @AssertFalse - значение false
-    // @AssertTrue - значение true
-    // @DecimalMax("10.3") - дробные максимальное
-    // @DecimalMin("10.3") - дробные минимальное
-    // @Digits(integer = 5, fraction = 1) - сколько целых и дробных
-    // @Future - даты
-    // @FutureOrPresent - даты
-    // @Past - даты
-    // @PastOrPresent - даты
-    // @Max(100) - максимум цифра
-    // @Min(12) - минимум цифра
-    // @Negative - отрицательное
-    // @NegativeOrZero - отрицательное и ноль
-    // @Pattern(regexp = "[a-z]{10}") - под наш шаблон
     @Column(name = "username", unique = true)
     private String username;
 
