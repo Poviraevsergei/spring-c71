@@ -50,6 +50,9 @@ public class User {
     @Column(name = "user_password")
     private String userPassword;
 
+    @Column(name = "age")
+    private Integer age;
+
     @Column(name = "created")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp created;
@@ -57,7 +60,4 @@ public class User {
     @Column(name = "changed")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp changed;
-
-    @Column(name = "age")
-    private Integer age;
 }

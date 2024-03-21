@@ -5,5 +5,8 @@
 </head>
 <body>
 This is failure page from UserController!
+
+${url}
+${errors}
 </body>
 </html>

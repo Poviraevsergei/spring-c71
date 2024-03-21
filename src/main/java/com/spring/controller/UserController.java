@@ -1,14 +1,18 @@
 package com.spring.controller;
 
+import com.spring.exception.CustomValidException;
 import com.spring.model.User;
 import com.spring.model.dto.UserCreateDto;
 import com.spring.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,40 +40,56 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         modelAndView.setViewName(users.isEmpty() ? "empty" : "get_users");
         modelAndView.addObject("users", users);
+        modelAndView.setStatus(HttpStatusCode.valueOf(200));
         return modelAndView;
     }
 
     @GetMapping("/{id}")
-    public String getUserById(@PathVariable("id") Long id, ModelMap modelMap) { //@PathVariable если мы хотим достать из пути
+    public String getUserById(@PathVariable("id") Long id, ModelMap modelMap, HttpServletResponse response) { //@PathVariable если мы хотим достать из пути
         Optional<User> user = userService.getUserById(id);
         if (user.isPresent()) {
             modelMap.addAttribute("user", user.get());
+            response.setStatus(200);
             return "get_user_by_id";
         }
+        response.setStatus(404);
         return "empty";
     }
 
     @PostMapping
-    public String createUser(@ModelAttribute @Valid UserCreateDto user, BindingResult bindingResult) {
+    public String createUser(@ModelAttribute @Valid UserCreateDto user, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                System.out.println(error);
-            }
-            return "failure";
+            throw new CustomValidException(bindingResult.getAllErrors().toString());
         }
-        return userService.createUser(user) ? "success" : "failure";
+        if (userService.createUser(user)) {
+            response.setStatus(201);
+            return "success";
+        }
+        response.setStatus(409);
+        return "failure";
     }
 
     @PostMapping("/update")
     public String updateUser(@RequestParam("username") String username,
                              @RequestParam("password") String password,
                              @RequestParam("id") Long id,
-                             @RequestParam("age") Integer age) {
-        return userService.updateUser(id, username, password, age) ? "success" : "failure";
+                             @RequestParam("age") Integer age,
+                             HttpServletResponse response) {
+        if (userService.updateUser(id, username, password, age)) {
+            response.setStatus(204);
+            return "success";
+        }
+        response.setStatus(409);
+        return "failure";
     }
 
     @PostMapping("/{id}")
-    public String deleteUserById(@PathVariable("id") Long id) {
-        return userService.deleteUserById(id) ? "success" : "failure";
+    public String deleteUserById(@PathVariable("id") Long id, HttpServletResponse response) {
+        if (userService.deleteUserById(id)) {
+            response.setStatus(204);
+            return "success";
+        }
+        response.setStatus(409);
+        return "failure";
     }
 }
